@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Classroom;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -27,13 +26,13 @@ class ClassroomRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-    public function delete(Classroom $classroom): bool
+    public function save(Classroom $classroom): bool
     {
-        try {
-            $this->entityManager->remove($classroom);
-            return true;
-        } catch (ORMInvalidArgumentException $e) {
-            return false;
-        }
+        $this->entityManager->persist($classroom);
+    }
+
+    public function delete(Classroom $classroom): void
+    {
+        $this->entityManager->remove($classroom);
     }
 }
