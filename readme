@@ -1,3 +1,8 @@
+For project deployment you may use docker
+commands for docker
+php bin/console doctrine:migrations:migrate
+php bin/console doctrine:fixtures:load
+
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
