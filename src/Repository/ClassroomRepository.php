@@ -26,13 +26,15 @@ class ClassroomRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-    public function save(Classroom $classroom): bool
+    public function save(Classroom $classroom): void
     {
         $this->entityManager->persist($classroom);
+        $this->entityManager->flush();
     }
 
     public function delete(Classroom $classroom): void
     {
         $this->entityManager->remove($classroom);
+        $this->entityManager->flush();
     }
 }

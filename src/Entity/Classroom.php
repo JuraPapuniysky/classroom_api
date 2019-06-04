@@ -16,27 +16,27 @@ class Classroom
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    public $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    public $name;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    public $isActive;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $createdAt;
+    public $createdAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $updatedAt;
+    public $updatedAt;
 
     public function __construct()
     {

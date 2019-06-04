@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Psr\Log\LoggerInterface;
 Use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClassroomController extends FOSRestController
 {
@@ -93,10 +94,12 @@ class ClassroomController extends FOSRestController
     public function delete(int $id): JsonResponse
     {
         try {
-            $this->service->deleteClassroom($id);
-
             return $this->json([
-               'message' => 'Classroom deleted',
+                'message' => 'Classroom deleted',
+            ]);
+        } catch (NotFoundHttpException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
             ]);
         } catch (ORMInvalidArgumentException $e) {
             throw new \Exception('Classroom is not deleted.');

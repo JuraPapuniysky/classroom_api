@@ -8,6 +8,7 @@ use App\Entity\Classroom;
 use App\Factories\ClassroomFactory;
 use App\Repository\ClassroomRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClassroomService
 {
@@ -65,7 +66,10 @@ class ClassroomService
 
     public function deleteClassroom(int $id): void
     {
-        $classroom = $this->repository->find($id);
-        $this->repository->delete($classroom);
+        if (($classroom = $this->repository->find($id)) !== null) {
+            $this->repository->delete($classroom);
+        }
+
+        throw new NotFoundHttpException('Classroom not found.');
     }
 }
