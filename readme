@@ -1,14 +1,45 @@
+For the working of project, the contents of the .env file should be like env.example
+
 For project deployment you may use docker
-commands for docker
+You need run command from project root folder for build containers
+docker-compose up -d --build
+this command for first start, then you can only use to start containers
+docker-compose up -d
+
+To load migrations and fixtures you need to run
+docker exec -it classroom_api_classroom_api_1 bash
+And then
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 
+phpmyadmin - http://localhost:8097/
+classroom_api - http://localhost:8087/
+
+if you don't wont to use docker, you need to run this commands from project root folder
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
+And configure the web server on the public folder
 
+
+To get list of classrooms
+GET http://url_to_api/classrooms
+
+To create classroom
+POST http://url_to_api/classroom
+To update classroom
+PUT http://url_to_api/classroom/{id}
 Raw data example for create/update request
 {
   "name": "test67",
   "isActive": false
 }
+
+To delete classroom
+DELETE http://url_to_api/classroom/{id}
+
+To active classroom
+PUT http://url_to_api/classroom/active/{id}
+
+To passive classroom
+PUT http://url_to_api/classroom/passive/{id}
