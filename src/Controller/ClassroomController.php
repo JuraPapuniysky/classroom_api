@@ -6,6 +6,7 @@ use App\Service\ClassroomService;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Psr\Log\LoggerInterface;
 Use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -14,9 +15,12 @@ class ClassroomController extends FOSRestController
 
     private $service;
 
-    public function __construct(ClassroomService $classroomService)
+    private $logger;
+
+    public function __construct(ClassroomService $classroomService, LoggerInterface $logger)
     {
         $this->service = $classroomService;
+        $this->logger = $logger;
     }
 
     /**
@@ -29,6 +33,7 @@ class ClassroomController extends FOSRestController
                 'classrooms' => $this->service->getAllClassrooms(),
             ]);
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');
         }
     }
@@ -43,6 +48,7 @@ class ClassroomController extends FOSRestController
                 'classroom' => $this->service->getOneById($id),
             ]);
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');
         }
     }
@@ -59,6 +65,7 @@ class ClassroomController extends FOSRestController
         } catch (ORMInvalidArgumentException $e) {
             throw new \Exception('Classroom is not saved.');
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');
         }
     }
@@ -75,6 +82,7 @@ class ClassroomController extends FOSRestController
         } catch (ORMInvalidArgumentException $e) {
             throw new \Exception('Classroom is not updated.');
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');
         }
     }
@@ -93,6 +101,7 @@ class ClassroomController extends FOSRestController
         } catch (ORMInvalidArgumentException $e) {
             throw new \Exception('Classroom is not deleted.');
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');
         }
     }
