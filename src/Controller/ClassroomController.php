@@ -13,9 +13,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClassroomController extends FOSRestController
 {
-
+    /**
+     * @var ClassroomService $service
+     */
     private $service;
 
+    /**
+     * @var LoggerInterface $logger
+     */
     private $logger;
 
     public function __construct(ClassroomService $classroomService, LoggerInterface $logger)
@@ -94,6 +99,7 @@ class ClassroomController extends FOSRestController
     public function delete(int $id): JsonResponse
     {
         try {
+            $this->service->deleteClassroom($id);
             return $this->json([
                 'message' => 'Classroom deleted',
             ]);
@@ -103,6 +109,50 @@ class ClassroomController extends FOSRestController
             ]);
         } catch (ORMInvalidArgumentException $e) {
             throw new \Exception('Classroom is not deleted.');
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
+            throw new \Exception('Something went wrong!');
+        }
+    }
+
+    /**
+     * @Rest\Put("/classroom/active/{id}")
+     */
+    public function active(int $id): JsonResponse
+    {
+        try {
+            return $this->json([
+                'classroom' => $this->service->activeClassroom($id),
+                'message' => 'Classroom active',
+            ]);
+        } catch (NotFoundHttpException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ]);
+        } catch (ORMInvalidArgumentException $e) {
+            throw new \Exception('Classroom is not activated.');
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
+            throw new \Exception('Something went wrong!');
+        }
+    }
+
+    /**
+     * @Rest\Put("/classroom/passive/{id}")
+     */
+    public function passive(int $id): JsonResponse
+    {
+        try {
+            return $this->json([
+                'classroom' => $this->service->passiveClassroom($id),
+                'message' => 'Classroom passive',
+            ]);
+        } catch (NotFoundHttpException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ]);
+        } catch (ORMInvalidArgumentException $e) {
+            throw new \Exception('Classroom is not passive.');
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
             throw new \Exception('Something went wrong!');

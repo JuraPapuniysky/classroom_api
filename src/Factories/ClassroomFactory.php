@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Factories;
 
 use App\Entity\Classroom;
-use App\Models\ClassroomResponseModel;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClassroomFactory
@@ -27,8 +26,9 @@ class ClassroomFactory
 
     private function setClassroomFromRequest(Request $request, Classroom $classroom): Classroom
     {
-        $classroom->setName($request->get('name'));
-        if ((integer)$request->get('isActive') === 1) {
+        $requestData = json_decode($request->getContent(), true);
+        $classroom->setName($requestData['name']);
+        if ($requestData['isActive'] === true) {
             $classroom->setIsActive(true);
         } else {
             $classroom->setIsActive(false);

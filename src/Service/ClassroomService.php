@@ -46,30 +46,56 @@ class ClassroomService
     public function createClassroom(Request $request): ?Classroom
     {
         $classroom = $this->factory->createClassroom($request);
-        if ($this->repository->save($classroom)) {
-            return $classroom;
-        }
+        $classroom = $this->repository->save($classroom);
 
-        return null;
+        return $classroom;
     }
 
     public function updateClassroom(Request $request, int $id): ?Classroom
     {
-        $classroom = $this->repository->find($id);
+        if (($classroom = $this->repository->find($id)) === null) {
+            throw new NotFoundHttpException('Classroom not found.');
+        }
         $classroom = $this->factory->updateClassroom($request, $classroom);
-        if ($this->repository->save($classroom)) {
-            return $classroom;
+        $classroom = $this->repository->save($classroom);
+
+        return $classroom;
+    }
+
+    public function activeClassroom(int $id): Classroom
+    {
+        if (($classroom = $this->repository->find($id)) === null) {
+            throw new NotFoundHttpException('Classroom not found.');
         }
 
-        return null;
+        if (!$classroom->getIsActive()) {
+            $classroom->setIsActive(true);
+            $classroom = $this->repository->save($classroom);
+        }
+
+        return $classroom;
+    }
+
+    public function passiveClassroom(int $id): Classroom
+    {
+        if (($classroom = $this->repository->find($id)) === null) {
+            throw new NotFoundHttpException('Classroom not found.');
+        }
+
+        if ($classroom->getIsActive()) {
+            $classroom->setIsActive(false);
+            $classroom = $this->repository->save($classroom);
+        }
+
+        return $classroom;
     }
 
     public function deleteClassroom(int $id): void
     {
         if (($classroom = $this->repository->find($id)) !== null) {
             $this->repository->delete($classroom);
+        } else {
+            throw new NotFoundHttpException('Classroom not found.');
         }
-
-        throw new NotFoundHttpException('Classroom not found.');
     }
 }
