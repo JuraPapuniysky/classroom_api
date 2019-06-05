@@ -1,7 +1,7 @@
 For the working of project, the contents of the .env file should be like env.example
 
 For project deployment you may use docker
-You need run command from project root folder for build containers
+You need run command from project root folder for build containers(You may need root privileges to run docker commands.)
 docker-compose up -d --build
 this command for first start, then you can only use to start containers
 docker-compose up -d
@@ -9,16 +9,19 @@ docker-compose up -d
 To load migrations and fixtures you need to run
 docker exec -it classroom_api_classroom_api_1 bash
 And then
+composer install
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 
 phpmyadmin - http://localhost:8097/
 classroom_api - http://localhost:8087/
 
-if you don't wont to use docker, you need to run this commands from project root folder
+If you don't wont to use docker, you need to set .env you database settings and run this commands from project root folder
+composer install
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
+
 And configure the web server on the public folder
 
 
